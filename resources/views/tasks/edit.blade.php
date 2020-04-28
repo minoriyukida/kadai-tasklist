@@ -19,4 +19,4 @@
         </div>
     </div>
 
-@endsecti
+@endsection
