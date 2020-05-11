@@ -16,22 +16,18 @@ class TasksController extends Controller
     // getでtasks/にアクセスされた場合の「一覧表示処理」
     public function index()
     {
-        $tasks = Task::all();
-        return view('tasks.index', ['tasks' => $tasks,
-        ]);
-        
-          $data = [];
         if (\Auth::check()) {
             $user = \Auth::user();
             $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
             
-            $data = [
+            return view('tasks.index', [
                 'user' => $user,
                 'tasks' => $tasks,
-            ];
+            ]);
+            
+        }else{
+            return view('welcome');
         }
-        
-        return view('welcome', $data);
     }
 
     /**
@@ -63,11 +59,10 @@ class TasksController extends Controller
             'content' => 'required',
              ]);
         
-        
-        $tasks = new Task;
-        $tasks->status = $request->status; 
-        $tasks->content = $request->content;
-        $tasks->save();
+        $request->user()->tasks()->create([
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
 
         return redirect('/');
     }
@@ -80,12 +75,18 @@ class TasksController extends Controller
      */
     // getでtasks/idにアクセスされた場合の「取得表示処理」
     public function show($id)
-    {
+    {   
         $tasks = Task::find($id);
-
-        return view('tasks.show', [
+       
+        if (\Auth::id() !== $tasks->user_id) {
+           return redirect('/'); 
+         }
+          return view('tasks.show', [
             'tasks' => $tasks,
         ]);
+         
+         
+
     }
 
     /**
@@ -98,7 +99,10 @@ class TasksController extends Controller
     public function edit($id)
     {
          $tasks = Task::find($id);
-
+         
+         if (\Auth::id() !== $tasks->user_id) {
+           return redirect('/'); 
+         }
         return view('tasks.edit', [
             'tasks' => $tasks,
         ]);
@@ -113,7 +117,10 @@ class TasksController extends Controller
      */
     // putまたはpatchでtasks/idにアクセスされた場合の「更新処理」
     public function update(Request $request, $id)
-    {
+    {    
+        if (\Auth::id() !== $tasks->user_id) {
+           return redirect('/'); 
+         }
         $this->validate($request, [
             'status' => 'required|max:10', 
             'content' => 'required',
@@ -137,8 +144,11 @@ class TasksController extends Controller
     public function destroy($id)
     {
          $tasks = Task::find($id);
-         $tasks->delete();
          
-         return redirect('/');
+        if (\Auth::id() !== $tasks->user_id) {
+          return redirect('/');
+         }
+           $tasks->delete();
+           return redirect('/');
     }
 }

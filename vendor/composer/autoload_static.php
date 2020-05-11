@@ -390,6 +390,7 @@ class ComposerStaticInit2c43fa6c18446f3cf2df7b6346fc8c4a
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Task' => __DIR__ . '/../..' . '/app/Task.php',
+        'App\\Tasklist' => __DIR__ . '/../..' . '/app/Tasklist.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'ArithmeticError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
         'AssertionError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
