@@ -118,21 +118,27 @@ class TasksController extends Controller
     // putまたはpatchでtasks/idにアクセスされた場合の「更新処理」
     public function update(Request $request, $id)
     {    
+        $tasks = Task::find($id);
+        
         if (\Auth::id() !== $tasks->user_id) {
            return redirect('/'); 
          }
+         
         $this->validate($request, [
             'status' => 'required|max:10', 
             'content' => 'required',
         ]);
 
-        $tasks = Task::find($id);
+        
         $tasks->status = $request->status; 
         $tasks->content = $request->content;
         $tasks->save();
 
         return redirect('/');
-    }
+         
+    }  
+         
+    
 
     /**
      * Remove the specified resource from storage.
@@ -151,4 +157,5 @@ class TasksController extends Controller
            $tasks->delete();
            return redirect('/');
     }
+    
 }
